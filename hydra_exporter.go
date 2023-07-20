@@ -13,14 +13,11 @@ import (
 	"github.com/prometheus/common/promlog"
 	"github.com/prometheus/common/promlog/flag"
 	"github.com/prometheus/exporter-toolkit/web"
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
+	"github.com/prometheus/exporter-toolkit/web/kingpinflag"
+	kingpin "github.com/alecthomas/kingpin/v2"
 )
 
 func main() {
-	listenAddress := kingpin.Flag(
-		"web.listen-address",
-		"Address on which to expose metrics and web interface.",
-	).Default(":9200").String()
 	metricsPath := kingpin.Flag(
 		"web.telemetry-path",
 		"Path under which to expose metrics.",
@@ -29,10 +26,7 @@ func main() {
 		"web.disable-exporter-metrics",
 		"Exclude metrics about the exporter itself (process_*, go_*).",
 	).Bool()
-	configFile := kingpin.Flag(
-		"web.config",
-		"[EXPERIMENTAL] Path to config yaml file that can enable TLS or authentication.",
-	).Default("").String()
+	toolkitFlags := kingpinflag.AddFlags(kingpin.CommandLine, ":9200")
 
 	promlogConfig := &promlog.Config{}
 	flag.AddFlags(kingpin.CommandLine, promlogConfig)
@@ -72,9 +66,8 @@ func main() {
 			</html>`))
 	})
 
-	level.Info(logger).Log("msg", "Listening on", "address", *listenAddress)
-	server := &http.Server{Addr: *listenAddress}
-	if err := web.ListenAndServe(server, *configFile, logger); err != nil {
+	server := &http.Server{}
+	if err := web.ListenAndServe(server, toolkitFlags, logger); err != nil {
 		level.Error(logger).Log("err", err)
 		os.Exit(1)
 	}
