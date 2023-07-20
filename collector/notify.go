@@ -112,10 +112,14 @@ func (c *notifyCollector) Update(ch chan<- prometheus.Metric) error {
 	}
 
 	// Labelless metrics from the event handler
-	ch <- prometheus.MustNewConstMetric(c.eventLoopIterations,
-		prometheus.CounterValue, *status["event_loop_iterations"].GetMetric()[0].Counter.Value)
-	ch <- prometheus.MustNewConstMetric(c.eventReceived,
-		prometheus.CounterValue, *status["event_received"].GetMetric()[0].Counter.Value)
+	if len(status["event_loop_iterations"].GetMetric()) > 0 {
+		ch <- prometheus.MustNewConstMetric(c.eventLoopIterations,
+			prometheus.CounterValue, *status["event_loop_iterations"].GetMetric()[0].Counter.Value)
+	}
+	if len(status["event_received"].GetMetric()) > 0 {
+		ch <- prometheus.MustNewConstMetric(c.eventReceived,
+			prometheus.CounterValue, *status["event_received"].GetMetric()[0].Counter.Value)
+	}
 	// Labelful metrics from the event handler
 	for _, metric := range status["notify_event"].GetMetric() {
 		channel := metric.Label[0].Value

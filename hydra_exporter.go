@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/user"
 
+	kingpin "github.com/alecthomas/kingpin/v2"
 	"github.com/go-kit/kit/log/level"
 	"github.com/helsinki-systems/hydra_exporter/collector"
 	"github.com/prometheus/client_golang/prometheus"
@@ -14,7 +15,6 @@ import (
 	"github.com/prometheus/common/promlog/flag"
 	"github.com/prometheus/exporter-toolkit/web"
 	"github.com/prometheus/exporter-toolkit/web/kingpinflag"
-	kingpin "github.com/alecthomas/kingpin/v2"
 )
 
 func main() {
