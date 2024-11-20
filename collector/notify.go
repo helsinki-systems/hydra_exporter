@@ -58,11 +58,11 @@ func NewNotifyCollector(logger log.Logger) Collector {
 			"Number of events received on the given channel",
 			[]string{"channel"}, nil),
 		notifyEventError: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "notify", "event_errors"),
+			prometheus.BuildFQName(namespace, "notify", "event_error"),
 			"Number of events received that were unprocessable by channel",
 			[]string{"channel"}, nil),
 		notifyEventRuntime: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "notify", "event_errors"),
+			prometheus.BuildFQName(namespace, "notify", "event_runtime"),
 			"Number of seconds spent executing events by channel",
 			[]string{"channel"}, nil),
 		// Metrics from the task dispatcher
